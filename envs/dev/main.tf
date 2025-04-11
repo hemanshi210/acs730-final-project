@@ -12,6 +12,15 @@ module "sg_web" {
   vpc_id   = module.vpc.vpc_id
 }
 
+module "alb" {
+  source             = "../../modules/alb"
+  project            = var.project
+  vpc_id             = module.vpc.vpc_id
+  public_subnets     = module.vpc.public_subnet_ids
+  security_group_id  = module.sg_web.sg_id
+  instance_id        = aws_instance.webserver1.id
+}
+
 resource "aws_instance" "webserver1" {
   ami                         = "ami-0c7217cdde317cfec" # Amazon Linux 2023 (us-east-1)
   instance_type               = "t2.micro"
